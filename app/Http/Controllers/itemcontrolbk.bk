@@ -1,0 +1,137 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Item;
+use App\Item_type;
+use App\Chart_of_account;
+use App\Coa_subitem;
+
+use Validator;
+use DB;
+use Session;
+use Request;
+use Carbon\Carbon;
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
+
+class ItemController extends Controller
+{
+    public function __construct(){
+        // $this->middleware('auth');
+    }
+    private function category_list($category_parent_id = 0) 
+    { 
+        // build our category list only once 
+        static $cats; 
+        static $i = 1;
+        $tab = str_repeat(" ",$i);
+
+        static $a = 0;
+        $pusher = "-";
+
+        $showPusher = str_repeat($pusher,$a);
+        if (!is_array($cats)) { 
+          $res  = DB::select('SELECT * FROM menus ORDER BY sort');
+          $cats = array(); 
+          foreach($res as $cat) { 
+             $cats[] = $cat; 
+          } 
+       } 
+        $list_items = array(); 
+        foreach($cats as $cat) { 
+                $a++;
+              // if not a match, move on 
+              if (( int )$cat->parent_id !== ( int )$category_parent_id) {
+              $a--; 
+                 continue; 
+              } 
+
+              echo $category_parent_id;
+              // open the list item 
+              $list_items[] = $showPusher.$cat->title; 
+                
+             $child = $this->category_list($cat->id);
+             
+             if($child){
+               
+               $list_items[] = $child;     
+             }
+            
+        } 
+      
+
+       return $list_items; 
+    
+    }
+    public function index(){
+    	$items = Item::with('item_type','coa_title')->where('coa_id',43)->get();
+        $res  = DB::select('SELECT * FROM menus ORDER BY sort');
+        foreach($res as $item){
+           
+            $data[] = $item;
+        }
+
+
+        $menu = $this->category_list(); 
+
+        dd($menu);
+
+    	return view('items.index',compact('items'));
+    }
+
+    public function create(){
+        $item_arr = [];
+
+    	$itemtypes = Item_type::pluck('item_type_name','id');
+    	$mother_item = Item::orderBy('item_name','ASC')->get();
+    	$coa = Chart_of_account::pluck('coa_title','id');
+        foreach($mother_item as $item){
+            $item_arr[$item->id] =  $item->item_name;
+
+        }
+      
+        
+        // $coa_sub1 = \App\Coa_item::pluck('coa_item_name','id');
+        // $coa_sub2 = \App\Coa_subitem::pluck('coa_item_name','id');
+        // $coa_sub3 = \App\Coa_subitem_three::pluck('coa_item_name','id');
+        // $coa_sub4 = \App\Coa_subitem_four::pluck('coa_item_name','id');
+
+    	return view('items.create',compact('itemtypes','mother_item','coa','item_arr'));
+    }
+
+    public function store(){
+    	$items = Request::all();
+
+        
+       
+    	Item::create($items);
+    	Session::flash('flash_message','Item Type Entry Saved.');
+    	return redirect()->back();
+    }
+
+    public function loadSubaccount(){
+        $id = Request::get('combobox1');
+        $subitem = Coa_subitem::where('coa_sub_id',$id)->get();  
+        return $subitem;      
+    }
+
+    public function edit($id){
+    	/*$itemtype = Item_type::find($id);
+    	return view('itemtypes.edit',compact('itemtype','id'));*/
+    }
+
+    public function update($id){
+    	/*$itemtype = Request::except('_token','_method');
+    	Item_type::where('id',$id)->update($itemtype);
+    	Session::flash('flash_message','Item Type Entry Updated.');
+    	return redirect()->back();*/
+    }
+
+    public function delete_item($id){
+    	/*$itemtype = Item_type::find($id);
+    	Item_type::where('id',$id)->delete($itemtype);
+    	Session::flash('flash_message','Item Type Entry Deleted.');
+    	return redirect()->back();*/
+    }
+}

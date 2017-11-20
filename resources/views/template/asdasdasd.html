@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Dashboard- Inquirinity</title>
+  <link href="{{ asset("assets/uploads/icon/favicon.ico") }}" rel="shortcut icon" type="image/x-icon" />
+  <link href="{{ asset("assets/uploads/icon/apple-icon-57x57.png") }}" rel="apple-touch-icon" sizes="57x57">
+  <link href="{{ asset("assets/uploads/icon/apple-icon-60x60.png") }}" rel="apple-touch-icon" sizes="60x60">
+  <link href="{{ asset("assets/uploads/icon/apple-icon-72x72.png") }}" rel="apple-touch-icon" sizes="72x72">
+  <link href="{{ asset("assets/uploads/icon/apple-icon-76x76.png") }}" rel="apple-touch-icon" sizes="76x76">
+  <link href="{{ asset("assets/uploads/icon/apple-icon-114x114.png") }}" rel="apple-touch-icon" sizes="114x114">
+  <link href="{{ asset("assets/uploads/icon/apple-icon-120x120.png") }}" rel="apple-touch-icon" sizes="120x120">
+  <link href="{{ asset("assets/uploads/icon/apple-icon-144x144.png") }}" rel="apple-touch-icon" sizes="144x144">
+  <link href="{{ asset("assets/uploads/icon/apple-icon-152x152.png") }}" rel="apple-touch-icon" sizes="152x152">
+  <link href="{{ asset("assets/uploads/icon/apple-icon-180x180.png") }}" rel="apple-touch-icon" sizes="180x180">
+  <link href="{{ asset("assets/uploads/icon/android-icon-192x192.png") }}" rel="icon" type="image/png" sizes="192x192">
+  <link href="{{ asset("assets/uploads/icon/favicon-32x32.png") }}" rel="icon" type="image/png" sizes="32x32">
+  <link href="{{ asset("assets/uploads/icon/favicon-96x96.png") }}" rel="icon" type="image/png" sizes="96x96">
+  <link href="{{ asset("assets/uploads/icon/favicon-16x16.png") }}" rel="icon" type="image/png" sizes="16x16">
+  <link href="{{ asset("assets/uploads/icon/manifest.json") }} "rel="manifest">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="{{ asset("assets/uploads/icon/ms-icon-144x144.png") }}">
+  <meta name="theme-color" content="#ffffff">
+
+  <link href="{{ asset("assets/css/bootstrap.min.css") }}" rel="stylesheet">
+
+  <link href="{{ asset("assets/css/datatable.css") }}" rel="stylesheet" type="text/css"/>
+  <link href="{{ asset("assets/lib/fa/css/font-awesome.min.css") }}" rel="stylesheet">
+  <link href="{{ asset("assets/lib/icheck/skins/all.css") }}" rel="stylesheet">
+  <link href="{{ asset("assets/css/animate.css") }}" rel="stylesheet">
+  <link href="{{ asset("assets/ui/lib/toggle/bootstrap-toggle.min.css") }}" rel="stylesheet">
+  <link href="{{ asset("assets/css/style.css") }}" rel="stylesheet">
+  <link href="{{ asset("assets/css/component.css") }}" rel="stylesheet">
+  <link href="{{ asset("assets/css/custom.css") }}" rel="stylesheet">
+  <link href="{{ asset("assets/ui/lib/c3/c3.min.css") }}" rel="stylesheet" type="text/css">
+  <!-- <link href="{{ asset("assets/ui/lib/modal.css") }}" rel="stylesheet" type="text/css"> -->
+</head>
+<body class="fixed-nav">
+  <section>
+    <div id="wrapper">
+      <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+          <ul class="nav" id="side-menu">
+            <li>
+              <a href="{{ url ('/') }}">
+                <i class="fa fa-th-large"></i> 
+                <span class="nav-label">Dashboard</span>
+              </a>
+            </li>
+            <li >
+              <a href="#">
+                <i class="fa fa-user"></i> 
+                <span class="nav-label">Supplier</span>
+                <span class="fa arrow"></span>
+              </a>
+              <ul class="nav nav-second-level">
+                <li><a href="{{action('SupplierController@index')}}">Supplier List</a></li>
+                <!-- <li><a href="{{ url ('employee/view/{id}') }}">Employee List</a></li> -->
+              </ul>
+            </li>
+            <li >
+              <a href="#">
+                <i class="fa fa-building-o"></i> 
+                <span class="nav-label">Daily Time Record</span>
+                <span class="fa arrow"></span>
+              </a>
+              <ul class="nav nav-second-level">
+                <li><a href="#">Add DTR</a></li>
+                <li><a href="#">View DTR</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+          <nav class="navbar navbar-fixed-top white-bg" role="navigation" style="margin-bottom: 0">
+            <img class="logo" width="150px" src="{{ asset("assets/uploads/system/logo.png") }}" alt="Logo">
+            <div class="navbar-header">
+              <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#">
+                <i class="fa fa-dedent"></i> 
+              </a>
+            </div>
+            <ul class="nav navbar-top-links navbar-right hidden-xs">
+              <li>
+                <form class="navbar-form full-width" method="post" action="index.php?_route=contacts/list/">
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="name" placeholder="Search Customers...">
+                    <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
+                  </div>
+                </form>
+                <li class="dropdown">
+                  <a class="dropdown-toggle count-info" data-toggle="dropdown" id="get_activity" href="#" aria-expanded="true">
+                    <i class="fa fa-bell"></i>
+                  </a>
+                  <div class="dropdown-backdrop"></div>
+                  <ul class="dropdown-menu dropdown-alerts" id="activity_loaded">
+                    <li id="activity_wait">
+                      <div class="text-center link-block">
+                        <a href="javascript:void(0)">
+                          <strong>Please Wait...</strong> <br> <br>
+                          <img class="text-center" src="{{ asset("assets/uploads/system/download.gif") }}" alt="Loading....">
+                        </a>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <li class="dropdown navbar-user">
+                  <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                    <img src="{{ asset("assets/ui/lib/imgs/default-user-avatar.png") }}" alt="">
+                    <span class="hidden-xs">Welcome Administrator</span> 
+                    <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu animated fadeInLeft">
+                    <li class="arrow"></li>
+                    <li><a href="#">Edit Profile</a></li>
+                    <li><a href="#">Change Password</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Logout</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          @yield('content')
+        </div>
+      </div>
+    </section>
+    <script src="{{ asset("assets/js/jquery-1.10.2.js") }}"></script>
+    <script src="{{ asset("assets/js/jquery-ui-1.10.4.min.js") }}"></script>
+    <script>
+      var _L = [];
+      var config_animate = 'No';
+    </script>
+<script>
+  $(document).ready(function() {
+    $('table#mytable').DataTable();
+  } );
+</script>
+<script type="text/javascript">
+  $('.answer_list').hide();
+  $('.list-group-item').click(function () {
+    document.getElementById('title').innerHTML = $(this).attr('id');
+    $('.answer_list').hide();
+    $('.answer_list').removeClass('show');
+    $('#' + $(this).attr('id') + 'Div').show();
+    $('.list-group-item').removeClass('active');
+    $('#' + $(this).attr('id')).addClass('active');
+  });
+</script>
+    <script src="{{ asset("assets/js/bootstrap.min.js") }}"></script>
+    <script src="{{ asset("assets/js/datatable.js") }}"></script>
+    <script src="{{ asset("assets/lib/progress.js") }}"></script>
+    <script src="{{ asset("assets/js/jquery.metisMenu.js") }}"></script>
+    <script src="{{ asset("assets/js/jquery.slimscroll.min.js") }}"></script>
+    <script src="{{ asset("assets/js/app.js") }}"></script>  
+    <script src="{{ asset("assets/lib/moment.js") }}"></script>
+    <script src="{{ asset("assets/ui/lib/blockui.js") }}"></script>
+    <script src="{{ asset("assets/ui/lib/toggle/bootstrap-toggle.min.js") }}"></script>
+    <script src="{{ asset("assets/lib/bootbox.min.js") }}"></script>
+    <script src="{{ asset("assets/lib/icheck/icheck.min.js") }}"></script>
+    <script src="{{ asset("assets/ui/lib/s2/js/select2.min.js") }}"></script>  
+    <script src="{{ asset("assets/ui/lib/s2/js/i18n/en-us.js") }}"></script>
+    <script src="{{ asset("assets/ui/lib/sn/summernote.min.js") }}"></script>
+    <script src="{{ asset("assets/ui/lib/imgcrop/croppic.js") }}"></script>
+    <script src="{{ asset("assets/ui/lib/profile.js") }}"></script>
+    <!--
+    -->
+    @yield('footer')
+
+    
+  </body>
+  </html>
